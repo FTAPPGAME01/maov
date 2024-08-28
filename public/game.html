@@ -1,0 +1,1971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>MAURICIOGAME - Juego</title>
+    <style>
+    body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+
+/* Estilos para la pantalla de juego */
+.game-container {
+    height: 100%;
+    background-image: url('./assents/FTAPPGAME\ \(5\)\ \(1\).png');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    z-index: 1;
+}
+
+.game-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+}
+
+.container {
+    height: calc(100% - 120px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 120px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.cell {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.cell.disabled {
+    background-color: #888;
+    cursor: not-allowed;
+}
+
+.alert {
+    position: absolute;
+    top: 540px;
+    width: 90%;
+    text-align: center;
+    display: none;
+    border-radius: 40px;
+    padding: 10px;
+    left: 12px;
+}
+
+.alert-win {
+    background-color: greenyellow;
+}
+
+.alert-lose {
+    background-color: red;
+}
+
+.alertText {
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.info {
+    position: relative;
+    margin-top: -225px;
+    width: 100%;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.player-info {
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.clock {
+    font-size: 24px;
+    color: #fff;
+    margin-top: 10px;
+}
+
+.pass-turn-button {
+    position: absolute;
+    top: 620px;
+    right: 20px;
+    background-color: #ffcc00;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#exitButton {
+    position: absolute;
+    top: 20px;
+    left: 80%;
+    background-color: purple;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#resetButton {
+    background-color: transparent;
+}
+
+/* Colores de las fichas */
+.blue-diamond, .blue-trophy {
+    background-color: blue;
+}
+
+.green-diamond, .green-trophy {
+    background-color: green;
+}
+
+.yellow-gold, .yellow-ruby {
+    background-color: yellow;
+}
+
+.red-gold, .red-ruby {
+    background-color: red;
+}
+
+/* Indicador de turno */
+.turn-indicator {
+    position: absolute;
+    top: 65px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+ /* Estilos del modal */
+ .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); /* Sombra ligera */
+        }
+
+        /* Estilos para el contenido del modal */
+        .modal-content input[type="text"],
+        .modal-content input[type="email"],
+        .modal-content input[type="password"] {
+            width: calc(100% - 40px);
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .modal-content button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        .modal-content button:hover {
+            background-color: #45a049;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #888;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+.emoji-image {
+    width: 50px;
+    height: 50px;
+}
+
+.turn-indicator {
+    display: none;
+}
+
+.logo {
+    width: 150px;
+    height: auto;
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.alert {
+    color: whitesmoke;
+    font-size: 24px;
+}
+
+#turnModal .modal-content {
+    background-color: rgb(125, 201, 11);
+    color: white;
+    font-size: 34px;
+    border: 6px solid rgb(248, 40, 40);
+}
+.players-list {
+    margin-top: 20px;
+}
+
+.player-item {
+    margin-bottom: 8px;
+    padding: 8px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+}
+
+.player-name {
+    font-weight: bold;
+    margin-right: 5px;
+}
+.btn-toggle.active {
+    background-color: #fff; /* Fondo blanco para el botón activo */
+    color: #000; /* Texto negro para el botón activo */
+}
+
+.btn-register {
+    background-color: #3d3bb2; /* Color de fondo para el botón de registro */
+    color: white; /* Texto blanco para el botón de registro */
+}
+
+.btn-login {
+    background-color: #008CBA; /* Color de fondo para el botón de inicio de sesión */
+    color: white; /* Texto blanco para el botón de inicio de sesión */
+}
+
+.button-group {
+    text-align: center;
+    margin-top: 20px;
+}
+/* Estilos para el botón de saldo */
+.btn-saldo {
+    background-color: #4CAF50; /* Color de fondo verde */
+    border: none; /* Elimina el borde por defecto */
+    color: white; /* Color del texto */
+    padding: 10px 20px; /* Espaciado interno */
+    text-align: center; /* Alineación del texto */
+    text-decoration: none; /* Sin subrayado */
+    display: inline-block; /* Se ajusta al tamaño del contenido */
+    font-size: 16px; /* Tamaño de fuente */
+    margin: 10px 2px; /* Espaciado externo */
+    cursor: pointer; /* Cambia el cursor a mano al pasar por encima */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra sutil */
+    transition: background-color 0.3s, transform 0.3s; /* Transición suave para el color de fondo y el tamaño */
+    position: fixed; /* Posición fija */
+    bottom: 160px; /* Distancia desde el borde inferior */
+    left: 50%; /* Centrando horizontalmente */
+    transform: translateX(-50%); /* Ajusta el centrado */
+}
+
+/* Estilo del botón al pasar el cursor por encima */
+.btn-saldo:hover {
+    background-color: #45a049; /* Color de fondo más oscuro al pasar el cursor */
+    transform: scale(1.05); /* Aumenta ligeramente el tamaño */
+}
+
+/* Estilo del botón al hacer clic */
+.btn-saldo:active {
+    background-color: #388e3c; /* Color de fondo aún más oscuro al hacer clic */
+    transform: scale(0.98); /* Reduce ligeramente el tamaño */
+}
+/* Estilo para el botón de jugadores online */
+#playerListButton {
+    background-color: #8a388e; /* Verde intenso */
+    border: none; /* Sin borde */
+    color: white; /* Texto blanco */
+    padding: 15px 32px; /* Espaciado interno */
+    text-align: center; /* Centrar texto */
+    text-decoration: none; /* Sin subrayado */
+    display: inline-block; /* Alineación en línea */
+    font-size: 16px; /* Tamaño de fuente */
+    margin: 4px 2px; /* Espaciado externo */
+    cursor: pointer; /* Mostrar cursor de puntero */
+    border-radius: 4px; /* Bordes redondeados */
+    transition: background-color 0.3s, transform 0.2s; /* Transiciones suaves */
+}
+
+#playerListButton:hover {
+    background-color: #8a388e; /* Verde más oscuro en hover */
+}
+
+#playerListButton:active {
+    background-color: #8a388e; /* Verde aún más oscuro cuando se hace clic */
+    transform: scale(0.98); /* Efecto de presionar */
+}
+
+</style>
+</head>
+<body>
+<!-- Pantalla de juego -->
+<div class="game-container">
+    <img src="./assents/Black_Kawaii_Illustration_Gaming_Logo-removebg-preview.png" alt="Logo" class="logo">
+    <div class="game-background"></div>
+    <button id="playerListButton">ADMINISTRADOR</butto>
+        <!-- Agrega el elemento para mostrar el número de mesas hoy -->
+<!-- <p id="mesasHoyText"><span id="mesasHoyCounter"></span></p> -->
+
+
+ <!-- <button id="resetButton" onclick="handleReset()">Reiniciar Mesa</button>  -->
+ 
+ <button id="exitButton" onclick="saveAndExit()" style="color: white;">Salir</button>
+
+    <!-- Botón para abrir el modal de saldo -->
+
+    <div class="turn-indicator" id="turnIndicator">ES TU TURNO (Ruperto)</div>
+    <div class="container">
+        <div class="row" id="diamond-row"></div>
+        <div class="row" id="gold-row"></div>
+        <div class="row" id="ruby-row"></div>
+        <div class="row" id="trophy-row"></div>
+    </div>
+    <div class="alert" id="alert"></div>
+    <div class="info" id="info"></div>
+    <!-- <div class="pass-turn-button" onclick="handlePassTurn()">Pasar Turno</div> -->
+    <!-- <div id="reloadButtonContainer">
+        <button onclick="openNequiPSEModal()">Recargar con Nequi PSE</button>
+    </div>
+     -->
+</div>
+<audio id="clickSound">
+    <source src="./assents/collect-points-190037.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+<div id="pinModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2>Introduce el PIN</h2>
+      <input type="password" id="pinInput" placeholder="Ingresa el PIN">
+      <button onclick="checkPIN()">Acceder</button>
+    </div>
+  </div>
+<!-- Agrega el botón de cierre al modal -->
+<div id="turnModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="hideTurnModal()">&times;</span> <!-- Botón de cierre -->
+        <!-- <h2>¡SE TERMINO TU TURNO!</h2> -->
+        <p id="turnMessage"></p>
+    </div>
+</div>
+
+<div id="registerModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeRegisterModal()">&times;</span>
+        <h2>Registro o Inicio de Sesión</h2>
+
+        <!-- Formulario de Registro -->
+        <form id="registrationForm" style="display: block;" onsubmit="event.preventDefault(); registerPlayer()">
+            <input type="text" id="usernameInput" placeholder="Nombre de usuario" required>
+            <input type="text" id="lastNameInput" placeholder="Apellido" required>
+            <input type="email" id="emailInput" placeholder="Correo electrónico" required>
+            <input type="password" id="passwordInput" placeholder="Contraseña" required>
+            <button type="submit">Registrarse</button>
+            <div class="fb-login-button" data-width="" data-size="large" data-button-type="continue_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false"></div>
+        </form>
+
+        <!-- Formulario de Inicio de Sesión -->
+       <!-- Formulario de Inicio de Sesión -->
+    <form id="loginForm" style="display: none;" onsubmit="event.preventDefault(); loginPlayer()">
+        <input type="email" id="loginEmailInput" placeholder="Correo electrónico" required>
+        <input type="password" id="loginPasswordInput" placeholder="Contraseña" required>
+        <button type="submit">Iniciar Sesión</button>
+    </form> 
+
+
+        <!-- Botones para cambiar entre Registro e Inicio de Sesión -->
+        <div class="button-group">
+            <button class="btn-toggle active" onclick="showRegistrationForm()">Inscribirse</button> 
+            <button class="btn-toggle active" onclick="showLoginForm()">Iniciar Sesión</button> 
+        </div>
+    </div>
+</div>
+   
+   
+<div id="rulesModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeRulesModal()">&times;</span>
+        <l1> ANUNCIO IMPORTANTE: POR PROTECION DE DATOS CADA VEZ QUE INICIE EL JUEGO DEBERAS REGISTRARTE NUEVAMENTE, ESTO LO HACEMOS PARA PREVENIR EL ROBO DE IDENTIDAD, SIN EMBARGO MANTENDRAS SIMPRE TU PUNTAJE SOLO DEBES COMUNICARTE CON TU ADMINISTRADOR MENCIONARLE TU ANTIGUO NOMBRE DE USUARIO Y LOS PUNTOS SERAN CARGADOS AUTOMATICAMENTE A TU NUEVO USUARIO, ASI PREVENIMOS EL ROBO DE DATO Y PUNTAJE EN NUESTRA APP SALUDOS FTAPPGAME</l1>
+        <h2>Reglas del Juego</h2>
+        <ul>
+            
+            <li>1. Organiza tu puntaje directamente con tu administrador. El puntaje mínimo es de 100,000 puntos.</li>
+            <li>2. Podrás tomar las fichas que desees .</li>
+            <li>3. Tendrás 6 segundos para jugar y tomar fichas.</li>
+            <li>4. Podrás retirarte y continuar tu juego cuando quieras.</li>
+            <li>5. Si llegas a 23,000 puntos en negativo, deberás hablar con tu administrador para recargar tus puntos.</li>
+            <li>6.La mesa se reiniciare una vez todos los jugadores tomen las 16 fichas del tablero de juego.</li>
+            <li>7. Cada ficha tiene un valor de: 23.000 puntos de perdida o 20.000 puntos de ganancia.</li>
+            <li>8. Las mesas estan divididas en 50% ganancia y 50% perdida.</li>
+        </ul>
+        <button onclick="closeRulesModal()">Aceptar</button>
+    </div>
+</div>
+
+<div id="playersModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closePlayersModal()">&times;</span>
+        <h2>Listado de Jugadores y Puntajes</h2>
+        <div id="playersList"></div>
+        <button onclick="closePlayersModal()">Volver</button>
+    </div>
+</div>
+
+<!-- Modal de Alerta de Saldo Insuficiente -->
+<div id="insufficientBalanceModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeInsufficientBalanceModal()">&times;</span>
+        <p>Saldo insuficiente. Por favor, comuníquese con su administrador para renovar sus puntos.</p>
+        <button onclick="redirectToWhatsApp()">Contactar por WhatsApp</button>
+    </div>
+</div>
+</div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+<script src="socket.io/socket.io.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const saldoButton = document.getElementById('saldoButton');
+    const saldoModal = document.getElementById('saldoModal');
+    const closeSaldoModal = document.getElementById('closeSaldoModal');
+    const saldoInfo = document.getElementById('saldoInfo');
+    const puntosRegistrarse = document.getElementById('puntosRegistrarse');
+
+    // Función para mostrar el modal con el saldo
+    const showSaldoModal = () => {
+        const playerScore = localStorage.getItem('playerScore') || 100000; // Puntaje actual del jugador registrado
+        saldoInfo.textContent = `Puntaje actual: ${playerScore} puntos`;
+
+        // Puedes reemplazar esto con la lógica correcta para obtener el puntaje de la mesa
+        const mesaScore = localStorage.getItem('mesaScore') || 0;
+        puntosRegistrarse.textContent = `Puntos al Registrarse: ${playerScore} puntos`;
+
+        saldoModal.style.display = 'block';
+    };
+
+    // Función para cerrar el modal
+    const closeSaldoModalFunc = () => {
+        saldoModal.style.display = 'none';
+    };
+
+    // Event listener para el botón de saldo
+    saldoButton.addEventListener('click', showSaldoModal);
+
+    // Event listener para cerrar el modal
+    closeSaldoModal.addEventListener('click', closeSaldoModalFunc);
+
+    // Event listener para cerrar el modal cuando se haga clic fuera del modal
+    window.addEventListener('click', (event) => {
+        if (event.target === saldoModal) {
+            closeSaldoModalFunc();
+        }
+    });
+});
+
+
+    // Función para manejar el evento de toma de fichas
+const handleTakeFicha = (player) => {
+    if (disableBoard) {
+        alert('No puedes tomar fichas porque el saldo es insuficiente.');
+        return;
+    }
+    // Lógica para tomar fichas
+};
+
+ const redirectToWhatsApp = () => {
+    // Crear un enlace para abrir WhatsApp sin un número específico
+    const message = encodeURIComponent('Me quedé sin saldo disponible, necesito aumentar mis puntos.');
+    const url = `https://wa.me/?text=${message}`;
+    
+    // Redirigir al usuario a WhatsApp
+    window.open(url, '_blank'); // Abre el enlace en una nueva pestaña o ventana
+
+    // Cerrar el modal después de redirigir
+    closeInsufficientBalanceModal();
+};
+
+// Función para cerrar el modal
+const closeInsufficientBalanceModal = () => {
+    const modal = document.getElementById('insufficientBalanceModal');
+    modal.style.display = 'none'; // Ocultar el modal
+};
+
+// Función para mostrar el modal
+const showInsufficientBalanceModal = () => {
+    const modal = document.getElementById('insufficientBalanceModal');
+    modal.style.display = 'block'; // Mostrar el modal
+};
+
+// Añadir un event listener para cerrar el modal si se hace clic fuera de la caja del modal
+window.onclick = (event) => {
+    const modal = document.getElementById('insufficientBalanceModal');
+    if (event.target === modal) {
+        closeInsufficientBalanceModal();
+    }
+};
+
+// Verificar el saldo y el acceso a fichas
+const updateScoreAndCheckBalance = (player) => {
+    if (score[player] <= 23000) {
+        showInsufficientBalanceModal();
+        disableBoard = true; // Bloquear el acceso a las fichas
+    } else {
+        disableBoard = false; // Permitir el acceso a las fichas
+        renderInfo(); // Actualizar la información del jugador si el puntaje es suficiente
+    }
+};
+// Inicializar el juego cargando los jugadores registrados y el estado del juego
+document.addEventListener('DOMContentLoaded', () => {
+    loadRegisteredPlayers();
+    loadGameState();
+    startGame();
+});
+
+
+    const openRulesModal = () => {
+    const rulesModal = document.getElementById('rulesModal');
+    rulesModal.style.display = 'block';
+};
+
+const closeRulesModal = () => {
+    const rulesModal = document.getElementById('rulesModal');
+    rulesModal.style.display = 'none';
+};
+
+const reloadNequi = () => {
+    // Simular una recarga exitosa con un monto fijo (puedes modificar esto según tu lógica real)
+    const amount = 50000; // Monto a recargar en pesos colombianos (ejemplo)
+    // Redirigir al usuario a la página de recarga de Nequi
+    window.location.href = 'https://clientes.nequi.com.co/recargas?_ga=2.238334726.785325265.1719500298-1936746638.1719342173';
+    // Actualizar el puntaje del jugador registrado
+    if (registeredPlayer) {
+        score[registeredPlayer] += amount; // Sumar el monto al puntaje del jugador
+        saveScore(); // Guardar el puntaje actualizado en el almacenamiento local
+        emitGameState(); // Emitir el estado actualizado del juego
+        updatePlayersList(); // Actualizar la lista de jugadores y puntajes en el modal
+    } else {
+        alert('Necesitas estar registrado para recargar con Nequi.');
+    }
+};
+
+window.fbAsyncInit = function() {
+    FB.init({
+        appId      : '452868114162406',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v10.0'
+    });
+    
+    FB.AppEvents.logPageView();   
+};
+const loginWithFacebook = () => {
+    // Intentar abrir la aplicación móvil de Facebook
+    window.location.href = 'fb://authorize?' +
+        'client_id=804332275094516' + // Tu ID de aplicación de Facebook
+        '&redirect_uri=' + encodeURIComponent('https://ftappgamem.onrender.com//facebook-callback') + // URL de callback de tu sitio
+        '&scope=public_profile,email'; // Permisos requeridos
+
+    // Esperar un corto período de tiempo y redirigir al navegador si la aplicación no se abre
+    setTimeout(() => {
+        window.location.href = 'https://www.facebook.com/v10.0/dialog/oauth?' +
+            'client_id=804332275094516' + // Tu ID de aplicación de Facebook
+            '&redirect_uri=' + encodeURIComponent('https://ftappgamem.onrender.com//facebook-callback') + // URL de callback de tu sitio
+            '&scope=public_profile,email'; // Permisos requeridos
+    }, 2000); // Esperar 2 segundos
+};
+
+(function(d, s, id){
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement(s); js.id = id;
+    js.src = "https://connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+const registerWithFacebook = () => {
+    FB.login(response => {
+        if (response.authResponse) {
+            FB.api('/me', {fields: 'name, last_name,email'}, function(response) {
+                const username = response.name;
+                const lastName = response.last_name;
+                const email = response.email;
+                const playerId = uuid(); // Generar un ID único para el jugador
+                const pin = generateRandomPin(); // Puedes generar un PIN aleatorio o usar otro método
+
+                // Simular el registro con Facebook, igual que el registro normal
+                if (username && lastName && pin) {
+                    localStorage.setItem(`${username}-registerTime`, new Date().toISOString());
+                    socket.emit('registerPlayer', { username, playerId });
+                    score[username] = 100000;
+                    takenRowsByPlayer[username] = [];
+                    registeredPlayer = username;
+                    currentPlayer = username;
+                    closeRegisterModal();
+                    renderGameState();
+                    updateTurnIndicator();
+                    startTurnTimer();
+                    emitGameState();
+                } else {
+                    alert('Error al obtener información de Facebook.');
+                }
+            });
+        } else {
+            alert('Inicio de sesión con Facebook cancelado o fallido.');
+        }
+    }, {scope: 'public_profile,email'});
+};
+
+
+const generateRandomPin = () => {
+    return Math.floor(1000 + Math.random() * 9000).toString(); // Genera un PIN de 4 dígitos
+};
+
+
+
+// Inicialización del contador de mesas hoy
+let mesasHoy = parseInt(localStorage.getItem('mesasHoy')) || 0;
+
+
+const updateMesasHoy = () => {
+    // Incrementa el contador de mesas hoy
+    mesasHoy++;
+    // Actualiza el contenido del span con el nuevo valor
+    document.getElementById('mesasHoyCounter').textContent = mesasHoy;
+    // Guarda el valor actualizado en el almacenamiento local
+    localStorage.setItem('mesasHoy', mesasHoy.toString());
+};
+
+const showPlayersModal = () => {
+    const playersModal = document.getElementById('playersModal');
+    playersModal.style.display = 'block';
+    updatePlayersList();
+};
+
+const closePlayersModal = () => {
+    const playersModal = document.getElementById('playersModal');
+    playersModal.style.display = 'none';
+};
+
+const reloadPlayerPoints = (player) => {
+    const amount = parseInt(prompt('Ingrese el monto de puntos a recargar:', '10000'), 10);
+    if (isNaN(amount) || amount <= 0) {
+        alert('Monto inválido. Por favor, ingrese un número positivo.');
+        return;
+    }
+    
+    // Cargar la lista guardada de jugadores
+    const savedPlayers = loadPlayersList();
+    
+    // Verificar si el jugador existe en savedPlayers o en score
+    if (savedPlayers[player] !== undefined || score[player] !== undefined) {
+        // Actualizar puntos en savedPlayers
+        savedPlayers[player] = (savedPlayers[player] || 0) + amount;
+        savePlayersList(savedPlayers);
+        
+        // Actualizar puntos en score si existe
+        if (score[player] !== undefined) {
+            score[player] += amount;
+        } else {
+            score[player] = savedPlayers[player];
+        }
+        
+        saveScore(); // Guardar el puntaje actualizado en el almacenamiento local
+        emitGameState(); // Emitir el estado actualizado del juego
+        updatePlayersList(); // Actualizar la lista de jugadores y puntajes en el modal
+        renderInfo(); // Actualizar la interfaz del juego
+        
+        alert(`Se han recargado ${amount} puntos al jugador ${player}`);
+    } else {
+        alert('Jugador no encontrado. Por favor, verifique el nombre del jugador.');
+    }
+};
+// Función para guardar la lista de jugadores en localStorage
+const savePlayersList = (playersList) => {
+    localStorage.setItem('playersList', JSON.stringify(playersList));
+};
+
+// Función para cargar la lista de jugadores desde localStorage
+const loadPlayersList = () => {
+    const savedList = localStorage.getItem('playersList');
+    return savedList ? JSON.parse(savedList) : {};
+};
+
+const updatePlayersList = () => {
+    const playersList = document.getElementById('playersList');
+    playersList.innerHTML = '';
+
+    // Cargar la lista guardada de jugadores
+    const savedPlayers = loadPlayersList();
+
+    // Combinar jugadores guardados con los actuales
+    const allPlayers = { ...savedPlayers, ...score };
+
+    for (const player in allPlayers) {
+        let playerName = player;
+
+        const playerItem = document.createElement('div');
+        playerItem.classList.add('player-item');
+
+        const playerInfo = document.createElement('span');
+        playerInfo.textContent = `${playerName}: ${allPlayers[player]}`;
+        playerItem.appendChild(playerInfo);
+
+        const registerTime = document.createElement('span');
+        const registerDate = localStorage.getItem(`${player}-registerTime`)
+            ? new Date(localStorage.getItem(`${player}-registerTime`))
+            : new Date();
+        registerTime.textContent = `Registrado: ${registerDate.toLocaleString()}`;
+        playerItem.appendChild(registerTime);
+
+        const lastSeenTime = document.createElement('span');
+        const lastSeenDate = localStorage.getItem(`${player}-lastSeenTime`)
+            ? new Date(localStorage.getItem(`${player}-lastSeenTime`))
+            : new Date();
+        lastSeenTime.textContent = `Últ. Conexión: ${lastSeenDate.toLocaleString()}`;
+        playerItem.appendChild(lastSeenTime);
+
+        const amountInput = document.createElement('input');
+        amountInput.type = 'number';
+        amountInput.min = '1';
+        amountInput.placeholder = 'Monto a recargar';
+        playerItem.appendChild(amountInput);
+
+        const reloadButton = document.createElement('button');
+        reloadButton.textContent = 'Recargar Puntos';
+        reloadButton.onclick = () => {
+            const amount = parseInt(amountInput.value, 10);
+            if (isNaN(amount) || amount <= 0) {
+                alert('Monto inválido. Por favor, ingrese un número positivo.');
+                return;
+            }
+
+            const pin = prompt('Ingrese el PIN de seguridad:');
+            if (pin === '25008') {
+                allPlayers[player] = (allPlayers[player] || 0) + amount;
+                savePlayersList(allPlayers);
+                updatePlayersList();
+                if (score[player] !== undefined) {
+                    score[player] += amount;
+                    saveScore();
+                    emitGameState();
+                    renderInfo();
+                }
+            } else {
+                alert('PIN incorrecto.');
+            }
+        };
+        playerItem.appendChild(reloadButton);
+
+        playersList.appendChild(playerItem);
+    }
+
+    // Guardar la lista actualizada
+    savePlayersList(allPlayers);
+};
+const savePlayerData = (username) => {
+    const playerData = {
+        score: score[username],
+        takenRows: takenRowsByPlayer[username],
+        status: playerStatus[username],
+        // Agrega cualquier otro dato relevante
+    };
+    localStorage.setItem(`playerData_${username}`, JSON.stringify(playerData));
+};
+const loadPlayerData = (username) => {
+    const storedData = localStorage.getItem(`playerData_${username}`);
+    if (storedData) {
+        const playerData = JSON.parse(storedData);
+        score[username] = playerData.score;
+        takenRowsByPlayer[username] = playerData.takenRows;
+        playerStatus[username] = playerData.status;
+        // Restaura cualquier otro dato relevante
+    } else {
+        // Inicializar con valores por defecto si no hay datos guardados
+        score[username] = 100000;
+        takenRowsByPlayer[username] = [];
+        playerStatus[username] = 'online';
+    }
+};
+const updateLastActive = (username) => {
+    localStorage.setItem(`lastActive_${username}`, Date.now());
+};
+
+const isSessionValid = (username) => {
+    const lastActive = localStorage.getItem(`lastActive_${username}`);
+    if (!lastActive) return false;
+    // Considera la sesión válida si el jugador estuvo activo en las últimas 24 horas
+    return (Date.now() - parseInt(lastActive)) < 24 * 60 * 60 * 1000;
+};
+const checkAndLoadSession = () => {
+    const username = localStorage.getItem('registeredPlayer');
+    if (username && isSessionValid(username)) {
+        loadPlayerData(username);
+        registeredPlayer = username;
+        currentPlayer = username;
+        // Actualizar la interfaz
+        renderGameState();
+    } else {
+        // Si la sesión no es válida, limpia los datos y muestra el modal de registro
+        localStorage.removeItem('registeredPlayer');
+        openRegisterModal();
+    }
+};
+const updatePlayerState = (username) => {
+    savePlayerData(username);
+    updateLastActive(username);
+};
+const safeGetPlayerData = (username, property) => {
+    if (!username || username === 'undefined') return null;
+    const data = score[username] || takenRowsByPlayer[username] || playerStatus[username];
+    return data ? data[property] : null;
+};
+const cleanupOldData = () => {
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('playerData_') || key.startsWith('lastActive_')) {
+            const username = key.split('_')[1];
+            if (!isSessionValid(username)) {
+                localStorage.removeItem(key);
+            }
+        }
+    }
+};
+const openRegisterModal = () => {
+        const registerModal = document.getElementById('registerModal');
+        registerModal.style.display = 'block';
+    };
+
+    const closeRegisterModal = () => {
+        const registerModal = document.getElementById('registerModal');
+        registerModal.style.display = 'none';
+    };
+    
+
+// Funciones para cambiar entre Registro e Inicio de Sesión
+const showRegistrationForm = () => {
+    document.getElementById('registrationForm').style.display = 'block';
+    document.getElementById('loginForm').style.display = 'none';
+};
+
+const showLoginForm = () => {
+    document.getElementById('registrationForm').style.display = 'none';
+    document.getElementById('loginForm').style.display = 'block';
+};
+
+//------------------------------------------------------------------------------------------
+const uuid = () => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0,
+        v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+};
+let registeredPlayer = ''; // Agregar esta variable para almacenar el jugador registrado
+// Función para enviar el correo de bienvenida
+const sendWelcomeEmail = (email) => {
+    try {
+        // Configurar el contenido del correo de bienvenida
+        const mailContent = `
+            <p>Te reconocimos Bienvenido a FTAPPGAME</p>
+            <img src="./assents/ftaoo.png" alt="Logo de la aplicación"> <!-- Reemplaza con la URL real del logo -->
+        `;
+
+        // Aquí deberías implementar la lógica real para enviar el correo
+        console.log('Correo de bienvenida enviado a:', email);
+
+        // Mostrar un mensaje o realizar alguna acción adicional después de enviar el correo (opcional)
+    } catch (error) {
+        console.error('Error al enviar el correo de bienvenida:', error);
+        // Manejar el error según sea necesario
+        alert('Hubo un problema al enviar el correo de bienvenida.');
+    }
+};
+
+// Función para verificar si el nombre de usuario ya está tomado
+const isUsernameTaken = (username) => {
+    // Aquí deberías obtener los nombres de usuario registrados del localStorage o de tu servidor
+    const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || {};
+    return registeredUsers.hasOwnProperty(username);
+};
+
+// Función para verificar si el correo electrónico ya está registrado
+const isEmailTaken = (email) => {
+    // Aquí deberías obtener los correos electrónicos registrados del localStorage o de tu servidor
+    const registeredEmails = JSON.parse(localStorage.getItem('registeredEmails')) || {};
+    return registeredEmails.hasOwnProperty(email);
+};
+const getPasswordByEmail = (email) => {
+    // Aquí deberías obtener la contraseña registrada para el correo electrónico dado
+    // Podrías usar localStorage o hacer una solicitud al servidor, dependiendo de tu configuración
+    const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || {};
+    if (registeredUsers.hasOwnProperty(email)) {
+        return registeredUsers[email].password;
+    }
+    return null; // Devolver null si el correo electrónico no está registrado
+};
+
+// Función para validar la contraseña
+const validatePassword = (password) => {
+    // Aquí puedes implementar tus propias reglas de validación de contraseña
+    // Por ejemplo, longitud mínima, caracteres especiales requeridos, etc.
+    if (password.length < 8) {
+        return false;
+    }
+    // Puedes agregar más condiciones según tus requisitos
+    return true;
+};
+//-------------------------------------------------------------------------------------
+// Guardar información del jugador registrado
+const saveRegisteredPlayerInfo = () => {
+    const playerData = {
+        score: score[registeredPlayer] || 100000,
+        takenRows: takenRowsByPlayer[registeredPlayer] || []
+    };
+    localStorage.setItem('registeredPlayerInfo', JSON.stringify(playerData));
+};
+
+// Cargar información del jugador registrado
+const loadRegisteredPlayerInfo = () => {
+    const playerData = JSON.parse(localStorage.getItem('registeredPlayerInfo'));
+    if (playerData) {
+        score[registeredPlayer] = playerData.score;
+        takenRowsByPlayer[registeredPlayer] = playerData.takenRows;
+    }
+};
+const saveRegisteredPlayers = () => {
+    localStorage.setItem('registeredPlayers', JSON.stringify(registeredPlayer));
+};
+const loadRegisteredPlayers = () => {
+    const savedPlayers = localStorage.getItem('registeredPlayers');
+    if (savedPlayers) {
+        registeredPlayer = JSON.parse(savedPlayers);
+    }
+};
+
+
+const registerPlayer = () => {
+    const username = document.getElementById('usernameInput').value;
+    const lastName = document.getElementById('lastNameInput').value; // Obtener el apellido ingresado
+    const email = document.getElementById('emailInput').value;
+    const password = document.getElementById('passwordInput').value;
+    const playerId = uuid(); // Generar un ID único para el jugador
+     // Verificar si el nombre de usuario ya está registrado
+    
+     // Verificar si el jugador fue creado desde el chat
+     const playersFromChat = JSON.parse(localStorage.getItem('playersFromChat') || '{}');
+    if (!playersFromChat[email] || playersFromChat[email].username !== username || playersFromChat[email].password !== password) {
+        alert('Este jugador no fue creado desde el chat. Por favor, regístrate primero en el chat antes de jugar.');
+        return;
+    }
+    // Verificar si el nombre de usuario ya está tomado
+    if (isUsernameTaken(username)) {
+        document.getElementById('alert').textContent = 'Este nombre de usuario ya está en uso. ¿Deseas continuar jugando?';
+        document.getElementById('registerModal').style.display = 'none'; // Ocultar modal de registro
+        return;
+    }
+
+    // Verificar si el correo electrónico ya está registrado
+    if (isEmailTaken(email)) {
+        document.getElementById('alert').textContent = 'Este correo electrónico ya está registrado. ¿Deseas continuar jugando?';
+        document.getElementById('registerModal').style.display = 'none'; // Ocultar modal de registro
+        return;
+    }
+
+    if (!validatePassword(password)) {
+        document.getElementById('alert').textContent = 'La contraseña no cumple con los requisitos mínimos.';
+        document.getElementById('registerModal').style.display = 'none';
+        return;
+    }
+    
+    // Actualizar la lista de jugadores registrados en chat.html
+    const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers')) || {};
+    registeredUsers[username] = { email: email, password: password, points: 100000 };
+    localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+
+   
+    const registeredEmails = JSON.parse(localStorage.getItem('registeredEmails')) || {};
+    registeredEmails[email] = username; // Almacenar el correo electrónico asociado con el nombre de usuario
+    localStorage.setItem('registeredEmails', JSON.stringify(registeredEmails));
+
+     // Registrar el nuevo usuario
+     registeredUsers[username] = { password: password, email: email };
+    registeredEmails[email] = username; // Mapa de correo electrónico a nombre de usuario
+    if (username && lastName && email && password) {
+        
+
+          // Guardar la hora de registro
+          localStorage.setItem(`${username}-registerTime`, new Date().toISOString());
+        // Tu lógica para registrar al jugador
+        const playerId = uuid(); // Generar un ID único para el jugador
+        socket.emit('registerPlayer', { username, playerId });
+         // Mostrar un mensaje de confirmación (opcional)
+         alert('¡Registro exitoso!');
+         // Mostrar la alerta después del registro
+        //  alert('Este juego está protegido por un sistema de reconocimiento de ID único. Si se detectan usuarios falsificados, serán bloqueados permanentemente.');
+        // Enviar el correo de bienvenida
+        sendWelcomeEmail(email);
+        // Más lógica de registro...
+        // Mostrar el modal de reglas después del registro
+        openRulesModal();
+    } else {
+        alert('Por favor completa todos los campos obligatorios.');
+    }
+
+    socket.emit('registerPlayer', { username, playerId }); // Emitir el evento de registro con el ID único
+    socket.emit('registerPlayer', username);
+    playerStatus[username] = 'online';
+
+    // Cargar el puntaje desde localStorage si existe
+    if (localStorage.getItem(username)) {
+    score[username] = parseInt(localStorage.getItem(username), 10);
+} else {
+    score[username] = 100000; // Este valor se establece solo si no hay un puntaje guardado previamente
+}
+
+    // Simulamos la adición del nuevo jugador a la mesa
+    takenRowsByPlayer[username] = [];
+    registeredPlayer = username; // Actualizar el jugador registrado
+    currentPlayer = username; // Actualizar el jugador actual
+
+    // Cerramos el modal de registro
+    closeRegisterModal();
+
+    // Actualizamos el estado del juego y renderizamos la mesa
+    renderGameState();
+    updateTurnIndicator();
+    startTurnTimer();
+    emitGameState();
+    // Guardar el estado del juego y los jugadores registrados antes de cerrar la ventana
+window.addEventListener('beforeunload', () => {
+    saveGameState();
+    saveRegisteredPlayers();
+});
+
+// Inicializar el juego cargando los jugadores registrados y el estado del juego
+document.addEventListener('DOMContentLoaded', () => {
+    loadRegisteredPlayers();
+    loadGameState();
+    startGame();
+});
+};
+const updateLastSeenTime = (username) => {
+    localStorage.setItem(`${username}-lastSeenTime`, new Date().toISOString());
+};
+const hashFunction = (password) => {
+    // Implement a proper hashing function here, such as SHA-256.
+    // This is a placeholder.
+    return password.split('').reverse().join('');
+};
+
+const loginPlayer = () => {
+    const email = document.getElementById('loginEmailInput').value;
+    const password = document.getElementById('loginPasswordInput').value;
+
+    const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '{}');
+    const registeredEmails = JSON.parse(localStorage.getItem('registeredEmails') || '{}');
+
+    if (registeredEmails[email]) {
+        const username = registeredEmails[email];
+        if (registeredUsers[username] && registeredUsers[username].password === password) {
+            registeredPlayer = username;
+            localStorage.setItem('registeredPlayer', username);
+            alert('Inicio de sesión exitoso.');
+            closeRegisterModal();
+            updateLastSeenTime(username);
+            renderGameState();
+            updateTurnIndicator();
+            startTurnTimer();
+            emitGameState();
+        } else {
+            alert('Contraseña incorrecta.');
+        }
+    } else {
+        alert('El correo electrónico no está registrado.');
+    }
+};
+document.getElementById('loginForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    loginPlayer();
+});
+
+const showGameScreen = () => {
+    document.querySelector('.game-container').style.display = 'block';
+    document.getElementById('registerModal').style.display = 'none';
+    updateGameView();
+};
+const logoutPlayer = () => {
+    const player = localStorage.getItem('registeredPlayer');
+    localStorage.removeItem('registeredPlayer');
+     document.querySelector('.game-container').style.display = 'none';
+    document.getElementById('registerModal').style.display = 'block';
+    alert('Has salido del juego.');
+};
+
+// Código para agregar usuarios de prueba (puede eliminarse después de probar)
+const addTestUser = () => {
+    const testUsers = {
+        'testuser': { email: 'test@example.com', password: 'password123' }
+    };
+    localStorage.setItem('registeredUsers', JSON.stringify(testUsers));
+};
+
+// Descomentar la siguiente línea para agregar usuarios de prueba (solo una vez)
+// addTestUser();
+
+
+
+//------------------------------------------------------------------------------ 
+   const saveScore = () => {
+    for (const player in score) {
+        localStorage.setItem(player, score[player]);
+    }
+};
+const loadScores = () => {
+    for (const player in initialScore) {
+        if (localStorage.getItem(player)) {
+            score[player] = parseInt(localStorage.getItem(player), 10);
+        } else {
+            score[player] = initialScore[player]; // Usa el puntaje inicial si no está guardado
+        }
+    }
+};
+
+
+// Al actualizar el estado de los jugadores, también guardar en localStorage
+const updatePlayerStatus = (player, status) => {
+    playerStatus[player] = status;
+    localStorage.setItem('playerStatus', JSON.stringify(playerStatus));
+};
+// Al cargar la página, cargar el estado de los jugadores desde el almacenamiento local
+const loadPlayerStatus = () => {
+    const storedPlayerStatus = localStorage.getItem('playerStatus');
+    if (storedPlayerStatus) {
+        playerStatus = JSON.parse(storedPlayerStatus);
+    }
+};
+   // Función para verificar si el jugador registrado ha tomado fichas
+const registeredPlayerPlayed = (player) => {
+    return takenRowsByPlayer[player] && takenRowsByPlayer[player].length > 0;
+};
+
+   let currentPlayer = 'Ruperto';
+    let score = {'Ruperto': 100000, 'Juan': 100000, 'Mauricio': 100000};
+    let playerStatus = {'Ruperto': 'offline', 'Juan': 'offline', 'Mauricio': 'offline'}; // Estado inicial de los jugadores
+    let initialScore = {'Ruperto': 100000, 'Juan': 100000, 'Mauricio': 100000};
+    let turnCount = 1;
+    let timeLeft = 6;
+    let disableBoard = false;
+    let diamondStates = [
+        {available: true, emoji: '💎'},
+        {available: true, emoji: '💎'},
+        {available: true, emoji: '☀️'},
+        {available: true, emoji: '☀️'}
+    ];
+    let goldBarStates = [
+        {available: true, emoji: '💰'},
+        {available: true, emoji: '💰'},
+        {available: true, emoji: '🥇'},
+        {available: true, emoji: '🥇'}
+    ];
+    let rubyStates = [
+        {available: true, emoji: '🔴'},
+        {available: true, emoji: '🔴'},
+        {available: true, emoji: '🍀'},
+        {available: true, emoji: '🍀'}
+    ];
+    let trophyStates = [
+        {available: true, emoji: '💚'},
+        {available: true, emoji: '💚'},
+        {available: true, emoji: '🏆'},
+        {available: true, emoji: '🏆'}
+    ];
+    let takenRowsByPlayer = {Ruperto: [], Juan: [], Mauricio: []};
+    let takenCount = 0;
+
+    const startGame = () => {
+    if (registeredPlayer && !registeredPlayerPlayed(registeredPlayer)) {
+        currentPlayer = registeredPlayer;
+        const wantsToLogin = confirm("¿Ya te has registrado en el juego? Haz clic en OK para iniciar sesión o en Cancelar para registrarte.");
+    }
+    
+    document.querySelector('.game-container').style.display = 'block';
+
+    // Cargar estado del juego si existe
+    if (localStorage.getItem('gameState')) {
+        const gameState = JSON.parse(localStorage.getItem('gameState'));
+        currentPlayer = gameState.currentPlayer;
+        score = gameState.score;
+        diamondStates = gameState.diamondStates;
+        goldBarStates = gameState.goldBarStates;
+        rubyStates = gameState.rubyStates;
+        trophyStates = gameState.trophyStates;
+        takenRowsByPlayer = gameState.takenRowsByPlayer;
+        takenCount = gameState.takenCount;
+        timeLeft = gameState.timeLeft;
+    }
+
+    renderGameState();
+    startTurnTimer();
+};
+
+   
+    const handlePassTurn = () => {
+        console.log('Pasando turno');
+        clearInterval(turnTimer);
+
+        // Lógica para cambiar el turno al siguiente jugador
+        const players = ['Ruperto', 'Juan', 'Mauricio', registeredPlayer].filter(player => player);
+        const currentIndex = players.indexOf(currentPlayer);
+        let nextIndex = (currentIndex + 1) % players.length;
+        
+        currentPlayer = players[nextIndex];
+        while (registeredPlayer && currentPlayer !== registeredPlayer && !registeredPlayerPlayed(registeredPlayer)) {
+            nextIndex = (nextIndex + 1) % players.length;
+            currentPlayer = players[nextIndex];
+        }
+
+        timeLeft = 10;
+        renderGameState();
+        updateTurnIndicator();
+        startTurnTimer();
+        emitGameState();
+
+        // Mostrar el modal de cambio de turno
+        showTurnChangeModal(currentPlayer);
+        // Mostrar el modal de cambio de turno y cerrarlo después de 1.5 segundos
+    showModalAndCloseAfterDelay();
+        saveGameState();
+    };
+    
+const showTurnChangeModal = (player) => {
+    const turnModal = document.getElementById('turnModal');
+    const turnMessage = document.getElementById('turnMessage');
+    turnMessage.textContent = `Turno de ${player}`;
+    turnModal.style.display = 'block';
+};
+
+
+const showTurnModal = (player) => {
+    const turnModal = document.getElementById('turnModal');
+    const turnMessage = document.getElementById('turnMessage');
+    turnMessage.textContent = `Turno de ${player}`;
+    turnModal.style.display = 'block';
+     // Cerrar automáticamente el modal después de 1.5 segundos
+     setTimeout(() => {
+        hideTurnModal();
+    }, 1500);
+};
+const showModalAndCloseAfterDelay = () => {
+    const turnModal = document.getElementById('turnModal');
+    const turnMessage = document.getElementById('turnMessage');
+    turnMessage.textContent = `Turno de ${currentPlayer}`;
+    turnModal.style.display = 'block';
+
+    // Establecer un temporizador para cerrar el modal después de 1500 milisegundos (1.5 segundos)
+    setTimeout(() => {
+        turnModal.style.display = 'none';
+    }, 2500);
+};
+
+const hideTurnModal = () => {
+    const turnModal = document.getElementById('turnModal');
+    turnModal.style.display = 'none';
+};
+
+
+    // Función para abrir el modal
+const openModal = () => {
+  const modal = document.getElementById('pinModal');
+  modal.style.display = 'block';
+};
+
+// Función para cerrar el modal
+const closeModal = () => {
+  const modal = document.getElementById('pinModal');
+  modal.style.display = 'none';
+};
+
+// Función para verificar el PIN
+const checkPIN = () => {
+  const pinInput = document.getElementById('pinInput').value;
+  const correctPIN = '2538'; // PIN correcto
+
+  if (pinInput === correctPIN) {
+    closeModal(); // Cierra el modal si el PIN es correcto
+  } else {
+    alert('PIN incorrecto. Inténtalo de nuevo.');
+  }
+};
+
+const patterns = [
+    [
+        { emoji: '🔴', type: 'lose', points: -23000 }, { emoji: '💚', type: 'win', points: 20000 },
+        { emoji: '💰', type: 'win', points: 20000 }, { emoji: '🍀', type: 'lose', points: -23000 },
+        { emoji: '🏆', type: 'win', points: 20000 }, { emoji: '☀️', type: 'lose', points: -23000 },
+        { emoji: '🥇', type: 'win', points: 20000 }, { emoji: '💎', type: 'win', points: 20000 }
+    ],
+    [
+        { emoji: '🏆', type: 'win', points: 20000 }, { emoji: '💎', type: 'win', points: 20000 },
+        { emoji: '💰', type: 'lose', points: -23000 }, { emoji: '🔴', type: 'lose', points: -23000 },
+        { emoji: '☀️', type: 'win', points: 20000 }, { emoji: '🍀', type: 'lose', points: -23000 },
+        { emoji: '🥇', type: 'win', points: 20000 }, { emoji: '💚', type: 'win', points: 20000 }
+    ],
+    [
+        { emoji: '🍀', type: 'win', points: 20000 }, { emoji: '🥇', type: 'lose', points: -23000 },
+        { emoji: '☀️', type: 'win', points: 20000 }, { emoji: '💰', type: 'lose', points: -23000 },
+        { emoji: '🔴', type: 'win', points: 20000 }, { emoji: '🏆', type: 'lose', points: -23000 },
+        { emoji: '💎', type: 'win', points: 20000 }, { emoji: '💚', type: 'lose', points: -23000 }
+    ],
+    [
+        { emoji: '💰', type: 'win', points: 20000 }, { emoji: '🍀', type: 'lose', points: -23000 },
+        { emoji: '🥇', type: 'win', points: 20000 }, { emoji: '☀️', type: 'lose', points: -23000 },
+        { emoji: '💚', type: 'win', points: 20000 }, { emoji: '🔴', type: 'lose', points: -23000 },
+        { emoji: '🏆', type: 'win', points: 20000 }, { emoji: '💎', type: 'lose', points: -23000 }
+    ]
+];
+
+let currentPatternIndex;
+
+const resetGameTable = () => {
+    console.log('Reiniciando la mesa de juego');
+    // Guardar el estado del jugador registrado antes de reiniciar
+    saveRegisteredPlayerInfo();
+    currentPlayer = 'Ruperto';
+    turnCount = 1;
+    timeLeft = 10;
+    disableBoard = false;
+    takenCount = 0;
+
+    // Elegir aleatoriamente un patrón
+    currentPatternIndex = Math.floor(Math.random() * patterns.length);
+
+    // Aplicar el patrón a las filas del juego
+    applyPatternToRows(diamondStates, patterns[currentPatternIndex].diamond, '💎', '☀️');
+    applyPatternToRows(goldBarStates, patterns[currentPatternIndex].gold, '💰', '🥇');
+    applyPatternToRows(rubyStates, patterns[currentPatternIndex].ruby, '🔴', '🍀');
+    applyPatternToRows(trophyStates, patterns[currentPatternIndex].trophy, '💚', '🏆');
+
+     // Restablecer las filas tomadas, manteniendo el estado del jugador registrado
+     takenRowsByPlayer = {
+        Ruperto: [],
+        Juan: [],
+        Mauricio: [],
+        [registeredPlayer]: takenRowsByPlayer[registeredPlayer] || []
+    };
+    // Asegúrate de que el jugador registrado pueda tomar fichas
+    if (registeredPlayer) {
+        takenRowsByPlayer[registeredPlayer] = takenRowsByPlayer[registeredPlayer] || [];
+    }
+
+    renderGameState();
+    showUrgentMessageModal();
+    // Verificar si ya se han tomado las 16 fichas
+    if (takenCount === 16) {
+           let mesasJugadas = parseInt(localStorage.getItem('mesasJugadas') || '0');
+        mesasJugadas++;
+        localStorage.setItem('mesasJugadas', mesasJugadas.toString());
+        // Incrementar el contador de mesas hoy solo si no se ha reiniciado hoy
+        const lastResetDate = localStorage.getItem('lastResetDate');
+        const today = new Date().toLocaleDateString();
+        
+        if (lastResetDate !== today) {
+            // Incrementar el contador de mesas hoy
+            mesasHoy++;
+            localStorage.setItem('lastResetDate', today);
+            updateMesasHoy();
+        }
+    }
+     // Abrir el modal de registrar jugador solo si no hay un jugador registrado
+     if (!registeredPlayer) {
+        openRegisterModal();
+    } else {
+        // Si hay un jugador registrado, asegurar que la mesa no esté bloqueada para ese jugador
+        disableBoard = false;
+        currentPlayer = registeredPlayer; // Asegura que el turno sea del jugador registrado
+        startTurnTimer(); // Reinicia el temporizador para el turno
+    }
+     // Cargar la información del jugador registrado
+     loadRegisteredPlayerInfo();
+    renderGameState();
+    // Llama a la función para actualizar el número de mesas hoy
+    updateMesasHoy();
+    // Abrir el modal de registrar jugador después de reiniciar la mesa
+    openRegisterModal();
+    // Llama a la función para actualizar el número de mesas hoy
+    updateMesasHoy();
+    
+    applyPatternToRows();
+
+// Llamar a loadRegisteredPlayers al cargar la página para asegurarse de que los jugadores registrados se carguen correctamente
+document.addEventListener('DOMContentLoaded', () => {
+    loadRegisteredPlayers();
+    startGame();
+});
+};
+
+const applyPatternToRows = () => {
+    // Elegir aleatoriamente un patrón
+    const currentPatternIndex = Math.floor(Math.random() * patterns.length);
+
+    // Aplicar el patrón a las filas del juego
+    applyPatternToRow(diamondStates, patterns[currentPatternIndex]);
+    applyPatternToRow(goldBarStates, patterns[currentPatternIndex]);
+    applyPatternToRow(rubyStates, patterns[currentPatternIndex]);
+    applyPatternToRow(trophyStates, patterns[currentPatternIndex]);
+
+    // Reorganizar aleatoriamente las fichas en cada fila
+    shuffleAndResetStates(diamondStates);
+    shuffleAndResetStates(goldBarStates);
+    shuffleAndResetStates(rubyStates);
+    shuffleAndResetStates(trophyStates);
+};
+const applyPatternToRow = (rowArray, pattern) => {
+    rowArray.forEach((item, index) => {
+        item.available = true; // Asegurar que las fichas estén disponibles al inicio
+        item.emoji = pattern[index].emoji;
+        item.type = pattern[index].type;
+    });
+};
+
+    const handleReset = () => {
+        resetGameTable();
+        saveGameState();
+        updateMesasHoy();
+    };
+
+    const renderGameState = () => {
+        console.log('Renderizando estado del juego');
+        renderBoard();
+        renderInfo();
+    };
+
+    const renderBoard = () => {
+        console.log('Renderizando tablero de juego');
+        renderRow(diamondStates, 'diamond-row');
+        renderRow(goldBarStates, 'gold-row');
+        renderRow(rubyStates, 'ruby-row');
+        renderRow(trophyStates, 'trophy-row');
+    };
+
+    const renderRow = (rowArray, rowId) => {
+        const rowElement = document.getElementById(rowId);
+        rowElement.innerHTML = '';
+        rowArray.forEach((item, index) => {
+            const cellElement = document.createElement('div');
+            cellElement.className = `cell ${getColorClass(item)}`;
+            cellElement.innerHTML = `<span>${item.emoji}</span>`;
+            if (!item.available || disableBoard) {
+                cellElement.classList.add('disabled');
+            } else {
+                cellElement.onclick = () => handlePress(item.emoji, index, rowArray, rowId);
+            }
+            rowElement.appendChild(cellElement);
+            
+        });
+    };
+
+    const getColorClass = (item) => {
+        if (item.emoji === '💎' || item.emoji === '☀️') return 'blue-diamond';
+        if (item.emoji === '💰' || item.emoji === '🥇') return 'yellow-gold';
+        if (item.emoji === '🔴' || item.emoji === '🍀') return 'red-ruby';
+        if (item.emoji === '💚' || item.emoji === '🏆') return 'green-trophy';
+    };
+
+    const renderInfo = () => {
+    const infoElement = document.getElementById('info');
+    const currentPlayerName = currentPlayer === registeredPlayer ? currentPlayer : hideLastName(currentPlayer);
+    infoElement.innerHTML = `
+        <div class="player-info">
+            <p>Puntaje: ${score[currentPlayer]}</p>
+            <p>Jugador: ${currentPlayerName}</p>
+            <p class="clock" id="clock">Tiempo restante: ${timeLeft}</p>
+        </div>
+    `;
+};
+    
+const hideLastName = (name) => {
+    const names = name.split(' ');
+    const firstName = names[0];
+    let hiddenName = '';
+    for (let i = 0; i < firstName.length; i++) {
+        hiddenName += '*';
+    }
+    return hiddenName;
+};
+    const playClickSound = () => {
+    const clickSound = document.getElementById('clickSound');
+    clickSound.currentTime = 0; // Reinicia el sonido si ya está reproduciéndose
+    clickSound.play();
+};
+
+//-----------------soket.io------------------------------
+const socket = io();
+ // Función para alternar entre el modal de inicio de sesión y registro
+ function toggleLoginRegister() {
+            const loginModal = document.getElementById('loginModal');
+            const registerModal = document.getElementById('registerModal');
+            loginModal.style.display = loginModal.style.display === 'none' ? 'block' : 'none';
+            registerModal.style.display = registerModal.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Manejar el inicio de sesión
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            socket.emit('login', { email, password });
+        });
+
+        socket.on('loginSuccess', (data) => {
+            currentPlayer = data.username;
+            document.getElementById('loginModal').style.display = 'none';
+            // Aquí puedes inicializar el juego para el jugador autenticado
+            alert(`Bienvenido de nuevo, ${currentPlayer}!`);
+        });
+
+        socket.on('loginError', (error) => {
+            alert(`Error de inicio de sesión: ${error}`);
+        });
+
+     socket.on('initialState', (gameState) => {
+         currentPlayer = gameState.currentPlayer;
+         score = gameState.score;
+         diamondStates = gameState.diamondStates;
+         goldBarStates = gameState.goldBarStates;
+         rubyStates = gameState.rubyStates;
+         trophyStates = gameState.trophyStates;
+         takenRowsByPlayer = gameState.takenRowsByPlayer;
+         takenCount = gameState.takenCount;
+         timeLeft = gameState.timeLeft;
+         renderGameState();
+     });
+
+     socket.on('stateChanged', (gameState) => {
+         currentPlayer = gameState.currentPlayer;
+         score = gameState.score;
+         diamondStates = gameState.diamondStates;
+         goldBarStates = gameState.goldBarStates;
+         rubyStates = gameState.rubyStates;
+         trophyStates = gameState.trophyStates;
+         takenRowsByPlayer = gameState.takenRowsByPlayer;
+         takenCount = gameState.takenCount;
+         timeLeft = gameState.timeLeft;
+         renderGameState();
+     });
+
+     const emitGameState = () => {
+         const gameState = {
+             currentPlayer: currentPlayer,
+             score: score,
+             diamondStates: diamondStates,
+             goldBarStates: goldBarStates,
+             rubyStates: rubyStates,
+             trophyStates: trophyStates,
+             takenRowsByPlayer: takenRowsByPlayer,
+             takenCount: takenCount,
+             timeLeft: timeLeft
+         };
+         socket.emit('updateState', gameState);
+     };
+     // Escuchar el evento para actualizar la lista de jugadores
+    socket.on('updatePlayersList', (players) => {
+        // Actualizar la lista de jugadores en la interfaz de usuario
+        const playersList = document.getElementById('playersList');
+        playersList.innerHTML = '';
+        players.forEach(player => {
+            const playerItem = document.createElement('div');
+            playerItem.textContent = player;
+            playersList.appendChild(playerItem);
+        });
+    });
+
+// Escuchar el evento de actualización de la lista de jugadores
+socket.on('updatePlayersList', (players) => {
+    players.forEach(player => {
+        playerStatus[player.name] = player.online ? 'online' : 'offline';
+    });
+    updatePlayersList();
+});
+
+// Emisión del estado de los jugadores al servidor
+socket.emit('updatePlayerStatus', { player: registeredPlayer, status: 'online' });
+
+// Event Listener para desconexión del jugador
+socket.on('playerDisconnected', (player) => {
+    playerStatus[player] = 'offline';
+    updatePlayersList();
+});
+
+//------------------------------------------------------------------------------------------------------------------
+const handlePress = (emoji, index, rowArray, rowId) => {
+    console.log('Manejando clic en celda');
+
+    // Verificar si es el turno del jugador actual
+    if (currentPlayer !== registeredPlayer) {
+        showAlert("No es tu turno para tomar fichas.", "lose");
+        return;
+    }
+   
+    // Verificar si el jugador ya ha tomado dos fichas en esta fila
+    const takenCountInRow = takenRowsByPlayer[currentPlayer].filter(row => row === rowId).length;
+    if (takenCountInRow >= 200) {
+        showAlert("Ya tomaste dos fichas en esta fila. Intenta en otra fila.", "lose");
+        return;
+    }
+    
+   
+    // Definir los puntos de ganancia y pérdida
+    const totalTurns = 16; // Total de fichas
+    const gainPoints = 20000;
+    const losePoints = 23000;
+    const totalGains = gainPoints * (totalTurns / 2); // Puntos totales de ganancia
+    const totalLosses = losePoints * (totalTurns / 2); // Puntos totales de pérdida
+    const remainingGains = totalGains - Object.values(score).reduce((acc, val) => acc + (val > 100000 ? val - 100000 : 0), 0);
+    const remainingLosses = totalLosses - Object.values(score).reduce((acc, val) => acc + (val < 100000 ? 100000 - val : 0), 0);
+    const gainProbability = remainingGains / (remainingGains + remainingLosses);
+
+    // Definir las probabilidades de ganar y perder de manera aleatoria
+    const winProbability = Math.random(); // Probabilidad aleatoria entre 0 y 1
+    const isWinning = winProbability < gainProbability; // Ajusta el valor para cambiar las probabilidades
+
+    // Obtener el cambio en puntos
+    const change = isWinning ? gainPoints : -losePoints;
+
+    // Actualizar el puntaje del jugador
+    score[currentPlayer] += change;
+
+    // Asegurarse de que el puntaje no sea menor a 0
+    if (score[currentPlayer] < 0) {
+        score[currentPlayer] = 0;
+    }
+
+    // Actualizar la ficha
+    rowArray[index].available = false;
+    rowArray[index].emoji = isWinning ? '<img src="./assents/ftaoo.png" class="emoji-image">' : '<img src="./assents/ftaoo.png" class="emoji-image">';
+
+    // Actualizar la celda seleccionada
+    const cellElement = document.getElementById(rowId).children[index];
+    cellElement.innerHTML = rowArray[index].emoji;
+    cellElement.classList.add('disabled');
+
+    // Registrar la fila tomada por el jugador
+    takenRowsByPlayer[currentPlayer].push(rowId);
+
+    // Incrementar el contador de fichas tomadas
+    takenCount++;
+
+    // Verificar si se han tomado todas las fichas
+    if (takenCount === totalTurns) {
+        resetGameTable();
+        updateMesasHoy();
+    } else {
+        renderInfo(); // Actualizar información del jugador
+        updateScoreAndCheckBalance(currentPlayer);
+    }
+    
+
+    playClickSound();
+
+    // Mostrar la alerta correspondiente
+    const message = `${currentPlayer} ${isWinning ? 'ganó' : 'perdió'} ${Math.abs(change)} puntos.`;
+    showAlert(message, isWinning ? 'win' : 'lose');
+
+    emitGameState(); // Emitir el nuevo estado del juego
+};
+
+
+//--------------------------------------------------------------------------------------------------------
+
+    const showAlert = (message, type) => {
+        const alertElement = document.getElementById('alert');
+        alertElement.innerText = message;
+        alertElement.classList.add(type === 'win' ? 'alert-win' : 'alert-lose');
+        alertElement.classList.remove(type === 'win' ? 'alert-lose' : 'alert-win');
+        alertElement.style.display = 'block';
+        setTimeout(() => {
+            alertElement.style.display = 'none';
+        }, 3000);
+    };
+
+    const shuffleAndResetStates = (stateArray) => {
+    shuffleArray(stateArray);
+    stateArray.forEach(item => {
+        item.available = true;
+    });
+};
+
+const shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+};
+
+    let turnTimer = 6;
+
+    const startTurnTimer = () => {
+    timeLeft = 6; // Reiniciar el tiempo restante a 10 segundos al iniciar el turno
+    updateClockDisplay(); // Actualizar el display del reloj
+    clearInterval(turnTimer); // Limpiar cualquier temporizador existente para evitar múltiples ejecuciones
+    turnTimer = setInterval(() => {
+        if (timeLeft > 0) {
+            timeLeft--;
+            updateClockDisplay(); // Actualizar el display del reloj en cada intervalo
+        } else {
+            clearInterval(turnTimer); // Limpiar el temporizador cuando se agote el tiempo
+            handlePassTurn(); // Pasar el turno al finalizar el tiempo
+        }
+    }, 1000); // Intervalo de 1 segundo
+};
+
+const startTurn = () => {
+    if (registeredPlayer && !registeredPlayerPlayed(registeredPlayer)) {
+        currentPlayer = registeredPlayer;
+    } else {
+        currentPlayer = 'Ruperto'; // O cualquier lógica para asignar el primer jugador
+    }
+    timeLeft = 6;
+    renderGameState();
+    updateTurnIndicator();
+    startTurnTimer();
+    emitGameState();
+    showTurnChangeModal(currentPlayer);
+};
+    
+const updateClockDisplay = () => {
+    const clockElement = document.getElementById('clock');
+    clockElement.innerText = `Tiempo restante: ${timeLeft}`;
+};
+const saveGameDataPeriodically = () => {
+    setInterval(() => {
+        localStorage.setItem('gameData', JSON.stringify({
+            currentPlayer: currentPlayer,
+            score: score,
+            registeredPlayer: registeredPlayer,
+            // Otros datos del juego que desees respaldar
+        }));
+    }, 60000); // Guardar cada 1 minuto (60000 milisegundos)
+};
+
+// Llama a la función para iniciar el respaldo periódico de datos
+saveGameDataPeriodically();
+
+const saveGameState = () => {
+    if (!document.getElementById('registerModal') || document.getElementById('registerModal').style.display === 'none') {
+        // Si no hay modal de registro o está oculto, mostrar la alerta normalmente
+        const continuePlaying = confirm('¿Continuas en línea? ¿Quieres seguir jugando?');
+        if (continuePlaying) {
+            // El usuario desea seguir jugando, se guarda el estado del juego
+            localStorage.setItem('gameState', JSON.stringify({
+                currentPlayer,
+                score,
+                diamondStates,
+                goldBarStates,
+                rubyStates,
+                trophyStates,
+                takenRowsByPlayer,
+                takenCount,
+                timeLeft
+            }));
+        } else {
+            // El usuario desea salir, guardar el estado y redirigir a homepage.html
+            localStorage.setItem('gameState', JSON.stringify({
+                currentPlayer,
+                score,
+                diamondStates,
+                goldBarStates,
+                rubyStates,
+                trophyStates,
+                takenRowsByPlayer,
+                takenCount,
+                timeLeft
+            }));
+            // No redirigir a homepage.html, dejar que el usuario decida cuándo salir
+        }
+    } else {
+        // Si hay un modal de registro visible, esperar a que se cierre antes de mostrar la alerta
+        const intervalId = setInterval(() => {
+            if (!document.getElementById('registerModal') || document.getElementById('registerModal').style.display === 'none') {
+                clearInterval(intervalId);
+                const continuePlaying = confirm('¿Continuas en línea? ¿Quieres seguir jugando?');
+                if (continuePlaying) {
+                    // El usuario desea seguir jugando, se guarda el estado del juego
+                    localStorage.setItem('gameState', JSON.stringify({
+                        currentPlayer,
+                        score,
+                        diamondStates,
+                        goldBarStates,
+                        rubyStates,
+                        trophyStates,
+                        takenRowsByPlayer,
+                        takenCount,
+                        timeLeft
+                    }));
+                } else {
+                    // El usuario desea salir, guardar el estado y redirigir a homepage.html
+                    localStorage.setItem('gameState', JSON.stringify({
+                        currentPlayer,
+                        score,
+                        diamondStates,
+                        goldBarStates,
+                        rubyStates,
+                        trophyStates,
+                        takenRowsByPlayer,
+                        takenCount,
+                        timeLeft
+                    }));
+                    // No redirigir a homepage.html, dejar que el usuario decida cuándo salir
+                }
+            }
+        }, 100); // Comprobar cada 100 milisegundos si el modal de registro está oculto
+    }
+};
+
+    const saveAndExit = () => {
+    console.log('saveAndExit() llamada');
+    emitGameState();
+    saveGameState(); // Guarda el estado del juego antes de salir
+    localStorage.setItem(`${registeredPlayer}-lastSeenTime`, new Date().toISOString());
+    socket.emit('updatePlayerStatus', { player: registeredPlayer, status: 'offline' });
+    // Redirige al usuario o realiza alguna acción para salir
+    alert('Estado del juego guardado. Saliendo...');
+    window.location.href = 'homepage.html'; // Redireccionar a la página de inicio
+    saveScore();
+};
+
+
+    window.addEventListener('beforeunload', saveScore);
+    socket.emit('updatePlayerStatus', { player: registeredPlayer, status: 'offline' });
+    const loadGameState = () => {
+    const savedGameState = localStorage.getItem('gameState');
+    if (savedGameState) {
+        const gameState = JSON.parse(savedGameState);
+        currentPlayer = gameState.currentPlayer;
+        registeredPlayer = gameState.registeredPlayer; // Cargar el jugador registrado
+        score = gameState.score;
+        diamondStates = gameState.diamondStates;
+        goldBarStates = gameState.goldBarStates;
+        rubyStates = gameState.rubyStates;
+        trophyStates = gameState.trophyStates;
+        takenRowsByPlayer = gameState.takenRowsByPlayer;
+        takenCount = gameState.takenCount;
+    }
+};
+
+
+    const updateTurnIndicator = () => {
+        const turnIndicator = document.getElementById('turnIndicator');
+        turnIndicator.textContent = `ES TU TURNO (${currentPlayer})`;
+    };
+    const handleScoreChange = (player, change) => {
+    score[player] += change;
+    // Limitar el puntaje mínimo a 0
+    if (score[player] < 0) {
+        score[player] = 0;
+        }
+    };
+    const calculateScoreDifference = (player) => {
+        return score[player] - initialScore[player];
+    };
+    // Función para abrir el modal de alerta de pago
+const showPaymentAlertModal = () => {
+    const modal = document.getElementById('paymentAlertModal');
+    modal.style.display = 'block'; // Mostrar el modal
+};
+
+// Función para cerrar el modal de alerta de pago
+const closePaymentAlertModal = () => {
+    const modal = document.getElementById('paymentAlertModal');
+    modal.style.display = 'none'; // Ocultar el modal
+};
+
+// Añadir un event listener para cerrar el modal si se hace clic fuera de la caja del modal
+window.onclick = (event) => {
+    const modal = document.getElementById('paymentAlertModal');
+    if (event.target === modal) {
+        closePaymentAlertModal();
+    }
+};
+
+    
+    window.onload = () => {
+    loadGameState();
+    renderGameState();
+    updateTurnIndicator(); // Mostrar el primer jugador al cargar el juego
+    startTurnTimer(); // Inicia el temporizador automáticamente al cargar el juego
+    openRegisterModal(); // Abre el modal de registro al cargar la página  
+
+    // Oculta el modal del PIN al cargar la página
+    closeModal();
+
+    startGame();
+
+    // Agregar event listener al botón
+    const playerListButton = document.getElementById('playerListButton');
+    playerListButton.addEventListener('click', showPlayersModal);
+      // Llama a la función para actualizar el número de mesas hoy
+      updateMesasHoy();
+      closeInsufficientBalanceModal()
+      showPaymentAlertModal();
+};
+    
+</script>
+</body>
+</html>
